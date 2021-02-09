@@ -1,0 +1,16 @@
+FROM alpine:edge
+
+ENV GOPATH=/go PATH=/go/bin:$PATH
+
+RUN apk add --no-cache ca-certificates \
+    && apk --no-cache add --virtual build-dependencies musl-dev go git
+
+RUN mkdir -p /go/src/github.com/pjoe/gocloudproxy
+WORKDIR /go/src/github.com/pjoe/gocloudproxy
+
+COPY go.mod go.sum ./
+COPY *.go .
+
+RUN go build
+
+CMD ./gocloudproxy
